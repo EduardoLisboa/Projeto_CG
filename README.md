@@ -1,7 +1,7 @@
 # Projeto de Computação Gráfica
 
 #### Renderização de um quarto com:
-* 3 camas (um beliche e uma cama
+* 3 camas (um beliche e uma cama)
 * Armário
 * Portas
 * Mesa
