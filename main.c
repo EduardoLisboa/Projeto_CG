@@ -67,7 +67,6 @@ Vec3 VERTICES[MAX_VERTICES];
 Vec3 NORMALS[MAX_VERTICES];
 Vec2 TEX_COORDS[MAX_VERTICES];
 
-float x_max = -100000;
 int DOOR_VERTEX_COUNT;
 Vec3 DOOR_VERTICES[MAX_VERTICES];
 Vec3 DOOR_NORMALS[MAX_VERTICES];
@@ -115,7 +114,6 @@ void draw_grid(int n);
 Vec3 forward(Transform* t);
 Vec3 right(Transform* t);
 Vec3 up(Transform* t);
-void move_door();
 
 
 /*-------------------------------------------*/
@@ -323,8 +321,6 @@ void display()
 	}
 	for(i = 0; i < DOOR_VERTEX_COUNT; i++)
 	{
-		if(DOOR_VERTICES[i].x >= x_max)
-			x_max = DOOR_VERTICES[i].x;
 		glNormal3f(DOOR_NORMALS[i].x, DOOR_NORMALS[i].y, DOOR_NORMALS[i].z);
 		glTexCoord2f(DOOR_TEX_COORDS[i].x, DOOR_TEX_COORDS[i].y);
 		glVertex3f(DOOR_VERTICES[i].x, DOOR_VERTICES[i].y, DOOR_VERTICES[i].z);
@@ -351,9 +347,7 @@ void idle()
 	// Forward movement
 	int move_forward = KEYBOARD['w'] - KEYBOARD['s'];
 	Vec3 fwd = forward(&CAM);
-	
-	if(KEYBOARD['1'])
-		printf("%d\n", x_max);
+
 	fwd.x *= KEYBOARD['c'] ? move_forward * 2 : move_forward;
 	fwd.y = 0.0f; // Projects fwd in the xz plane
 	fwd.z *= KEYBOARD['c'] ? move_forward * 2 : move_forward;
@@ -494,18 +488,3 @@ Vec3 right(Transform* t) {
 
 	return v;
 }
-
-/*
-Porta Principal: 
-X 1.4266
-Y 8.3678
-Z 2.736
-Porta Janela:
-X -1.6858
-Y -6.401
-Z 2.7345
-Janelas:
-X -1.6813
-Y -6.4363
-Z 2.9417
-*/
