@@ -19,6 +19,6 @@
 - [X] Iluminação básica
 - [X] Movimentação
 - [X] Câmera em primeira pessoa
-- [ ] Movimentação da porta principal
-- [ ] Movimentação da porta secundária
+- [X] Movimentação da porta principal
+- [X] Movimentação da porta secundária
 - [ ] Movimentação das janelas
