@@ -21,4 +21,4 @@
 - [X] Câmera em primeira pessoa
 - [X] Movimentação da porta principal
 - [X] Movimentação da porta secundária
-- [ ] Movimentação das janelas
+- [X] Movimentação das janelas
