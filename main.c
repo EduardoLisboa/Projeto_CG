@@ -81,10 +81,22 @@ Vec3 WINDOWED_DOOR_VERTICES[MAX_VERTICES];
 Vec3 WINDOWED_DOOR_NORMALS[MAX_VERTICES];
 Vec2 WINDOWED_DOOR_TEX_COORDS[MAX_VERTICES];
 
-int WINDOW_VERTEX_COUNT;
-Vec3 WINDOW_VERTICES[MAX_VERTICES];
-Vec3 WINDOW_NORMALS[MAX_VERTICES];
-Vec2 WINDOW_TEX_COORDS[MAX_VERTICES];
+int DOOR_WINDOW_VERTEX_COUNT;
+Vec3 DOOR_WINDOW_VERTICES[MAX_VERTICES];
+Vec3 DOOR_WINDOW_NORMALS[MAX_VERTICES];
+Vec2 DOOR_WINDOW_TEX_COORDS[MAX_VERTICES];
+
+int open_windows = -1;
+int window_angle = 0;
+int LEFT_WINDOW_VERTEX_COUNT;
+Vec3 LEFT_WINDOW_VERTICES[MAX_VERTICES];
+Vec3 LEFT_WINDOW_NORMALS[MAX_VERTICES];
+Vec2 LEFT_WINDOW_TEX_COORDS[MAX_VERTICES];
+
+int RIGHT_WINDOW_VERTEX_COUNT;
+Vec3 RIGHT_WINDOW_VERTICES[MAX_VERTICES];
+Vec3 RIGHT_WINDOW_NORMALS[MAX_VERTICES];
+Vec2 RIGHT_WINDOW_TEX_COORDS[MAX_VERTICES];
 
 
 /*---------------------------------------------*/
@@ -93,6 +105,7 @@ Vec2 WINDOW_TEX_COORDS[MAX_VERTICES];
 void init_gl();
 void setup_lighting();
 int load_obj(const char* path, int object);
+int load_all_objects();
 
 
 /*---------------------------------------------*/
@@ -112,6 +125,7 @@ void reshape(int width, int height);
 void draw_grid(int n);
 void main_door();
 void side_door();
+void windows();
 
 
 /*--------------------------------------------*/
@@ -146,31 +160,12 @@ int main(int argc, char** argv)
 	// Initializing some options of OpenGL and lighting
 	init_gl();
 
-	// Setting initial camera position outside the room and facing the door
+	// Setting initial camera position outside the room and facing the main door
 	CAM.position = (Vec3) {2.0f, 4.0f, -15.0f};
 	CAM.rotation = (Vec3) {0.0f, 90.0f, 0.0f};
 
 	// Loading the object files
-	if(!load_obj("objects/QuartoFinal.obj", 1))
-    {
-		perror("Erro ao abrir o arquivo");
-		return -1;
-	}
-	if(!load_obj("objects/portaPrincipal.obj", 2))
-    {
-		perror("Erro ao abrir o arquivo");
-		return -1;
-	}
-	if(!load_obj("objects/portaJanela.obj", 3))
-    {
-		perror("Erro ao abrir o arquivo");
-		return -1;
-	}
-	if(!load_obj("objects/Janelas.obj", 4))
-    {
-		perror("Erro ao abrir o arquivo");
-		return -1;
-	}
+	load_all_objects();
 	
 	// Initializing main loop
 	glutMainLoop();
@@ -280,12 +275,26 @@ int load_obj(const char* path, int object)
 					WINDOWED_DOOR_NORMALS[WINDOWED_DOOR_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
 					WINDOWED_DOOR_VERTEX_COUNT++;
 				}
-				else // Windows
+				else if(object == 4) // Door window
 				{
-					WINDOW_VERTICES[WINDOW_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-					WINDOW_TEX_COORDS[WINDOW_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-					WINDOW_NORMALS[WINDOW_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-					WINDOW_VERTEX_COUNT++;
+					DOOR_WINDOW_VERTICES[DOOR_WINDOW_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
+					DOOR_WINDOW_TEX_COORDS[DOOR_WINDOW_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
+					DOOR_WINDOW_NORMALS[DOOR_WINDOW_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
+					DOOR_WINDOW_VERTEX_COUNT++;
+				}
+				else if(object == 5) // Left window
+				{
+					LEFT_WINDOW_VERTICES[LEFT_WINDOW_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
+					LEFT_WINDOW_TEX_COORDS[LEFT_WINDOW_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
+					LEFT_WINDOW_NORMALS[LEFT_WINDOW_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
+					LEFT_WINDOW_VERTEX_COUNT++;
+				}
+				else // Right window
+				{
+					RIGHT_WINDOW_VERTICES[RIGHT_WINDOW_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
+					RIGHT_WINDOW_TEX_COORDS[RIGHT_WINDOW_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
+					RIGHT_WINDOW_NORMALS[RIGHT_WINDOW_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
+					RIGHT_WINDOW_VERTEX_COUNT++;
 				}
 			}
 		}
@@ -294,6 +303,40 @@ int load_obj(const char* path, int object)
 	fclose(fp);
 
 	return 1;
+}
+
+int load_all_objects()
+{
+	if(!load_obj("objects/quartoJanela.obj", 1))
+    {
+		perror("Erro ao abrir o arquivo");
+		return -1;
+	}
+	if(!load_obj("objects/portaPrincipal.obj", 2))
+    {
+		perror("Erro ao abrir o arquivo");
+		return -1;
+	}
+	if(!load_obj("objects/portaJanela.obj", 3))
+    {
+		perror("Erro ao abrir o arquivo");
+		return -1;
+	}
+	if(!load_obj("objects/Janelas.obj", 4))
+    {
+		perror("Erro ao abrir o arquivo");
+		return -1;
+	}
+	if(!load_obj("objects/Janela1.obj", 5))
+    {
+		perror("Erro ao abrir o arquivo");
+		return -1;
+	}
+	if(!load_obj("objects/Janela2.obj", 6))
+    {
+		perror("Erro ao abrir o arquivo");
+		return -1;
+	}
 }
 
 
@@ -355,12 +398,41 @@ void display()
 		glTexCoord2f(WINDOWED_DOOR_TEX_COORDS[i].x, WINDOWED_DOOR_TEX_COORDS[i].y);
 		glVertex3f(WINDOWED_DOOR_VERTICES[i].x, WINDOWED_DOOR_VERTICES[i].y, WINDOWED_DOOR_VERTICES[i].z);
 	}
-	// Draw the windows
-	for(i = 0; i < WINDOW_VERTEX_COUNT; i++)
+	for(i = 0; i < DOOR_WINDOW_VERTEX_COUNT; i++)
 	{
-		glNormal3f(WINDOW_NORMALS[i].x, WINDOW_NORMALS[i].y, WINDOW_NORMALS[i].z);
-		glTexCoord2f(WINDOW_TEX_COORDS[i].x, WINDOW_TEX_COORDS[i].y);
-		glVertex3f(WINDOW_VERTICES[i].x, WINDOW_VERTICES[i].y, WINDOW_VERTICES[i].z);
+		glNormal3f(DOOR_WINDOW_NORMALS[i].x, DOOR_WINDOW_NORMALS[i].y, DOOR_WINDOW_NORMALS[i].z);
+		glTexCoord2f(DOOR_WINDOW_TEX_COORDS[i].x, DOOR_WINDOW_TEX_COORDS[i].y);
+		glVertex3f(DOOR_WINDOW_VERTICES[i].x, DOOR_WINDOW_VERTICES[i].y, DOOR_WINDOW_VERTICES[i].z);
+	}
+	glEnd();
+	glPopMatrix();
+
+	// Draw the left window
+	glPushMatrix();
+	glTranslatef(14.902783, 3.648618, -1.792326);
+	glRotatef(window_angle, 0.0f, 1.0f, 0.0f);
+	glTranslatef(-14.902783, -3.648618, 1.792326);
+	glBegin(GL_TRIANGLES);
+	for(i = 0; i < LEFT_WINDOW_VERTEX_COUNT; i++)
+	{
+		glNormal3f(LEFT_WINDOW_NORMALS[i].x, LEFT_WINDOW_NORMALS[i].y, LEFT_WINDOW_NORMALS[i].z);
+		glTexCoord2f(LEFT_WINDOW_TEX_COORDS[i].x, LEFT_WINDOW_TEX_COORDS[i].y);
+		glVertex3f(LEFT_WINDOW_VERTICES[i].x, LEFT_WINDOW_VERTICES[i].y, LEFT_WINDOW_VERTICES[i].z);
+	}
+	glEnd();
+	glPopMatrix();
+
+	// Draw the right window
+	glPushMatrix();
+	glTranslatef(14.903056, 3.648618, 3.201038);
+	glRotatef(-window_angle, 0.0f, 1.0f, 0.0f);
+	glTranslatef(-14.903056, -3.648618, -3.201038);
+	glBegin(GL_TRIANGLES);
+	for(i = 0; i < RIGHT_WINDOW_VERTEX_COUNT; i++)
+	{
+		glNormal3f(RIGHT_WINDOW_NORMALS[i].x, RIGHT_WINDOW_NORMALS[i].y, RIGHT_WINDOW_NORMALS[i].z);
+		glTexCoord2f(RIGHT_WINDOW_TEX_COORDS[i].x, RIGHT_WINDOW_TEX_COORDS[i].y);
+		glVertex3f(RIGHT_WINDOW_VERTICES[i].x, RIGHT_WINDOW_VERTICES[i].y, RIGHT_WINDOW_VERTICES[i].z);
 	}
 	glEnd();
 	glPopMatrix();
@@ -381,6 +453,7 @@ void idle()
 
 	main_door();
 	side_door();
+	windows();
 
 	// Lateral movement
 	int move_right = KEYBOARD['d'] - KEYBOARD['a'];
@@ -435,6 +508,8 @@ void keyboard(unsigned char key, int x, int y)
 		open_main_door *= -1;
 	if(tolower(key) == '2')
 		open_side_door *= -1;
+	if(tolower(key) == '3')
+		open_windows *= -1;
 }
 
 void keyboard_up(unsigned char key, int x, int y)
@@ -512,6 +587,25 @@ void side_door()
 			side_door_angle += 3;
 		else
 			side_door_angle = 0;
+	}
+}
+
+// Centered in the left window
+void windows()
+{
+	if(open_windows == 1)
+	{
+		if(window_angle > -145)
+			window_angle -= 3;
+		else
+			window_angle = -145;
+	}
+	else
+	{
+		if(window_angle < 0)
+			window_angle += 3;
+		else
+			window_angle = 0;
 	}
 }
 
