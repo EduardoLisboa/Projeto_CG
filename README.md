@@ -16,7 +16,7 @@
 
 #### Implementações
 - [X] Quarto
-- [X] Iluminação
+- [X] Iluminação básica
 - [X] Movimentação
 - [X] Câmera em primeira pessoa
 - [ ] Movimentação da porta principal
