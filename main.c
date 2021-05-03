@@ -67,11 +67,15 @@ Vec3 VERTICES[MAX_VERTICES];
 Vec3 NORMALS[MAX_VERTICES];
 Vec2 TEX_COORDS[MAX_VERTICES];
 
+int main_door_angle = 0;
+int open_main_door = -1;
 int DOOR_VERTEX_COUNT;
 Vec3 DOOR_VERTICES[MAX_VERTICES];
 Vec3 DOOR_NORMALS[MAX_VERTICES];
 Vec2 DOOR_TEX_COORDS[MAX_VERTICES];
 
+int side_door_angle = 0;
+int open_side_door = -1;
 int WINDOWED_DOOR_VERTEX_COUNT;
 Vec3 WINDOWED_DOOR_VERTICES[MAX_VERTICES];
 Vec3 WINDOWED_DOOR_NORMALS[MAX_VERTICES];
@@ -106,6 +110,8 @@ void reshape(int width, int height);
 /*------------- DRAWING FUNCTIONS -------------*/
 /*---------------------------------------------*/
 void draw_grid(int n);
+void main_door();
+void side_door();
 
 
 /*--------------------------------------------*/
@@ -311,7 +317,8 @@ void display()
 
 	draw_grid(25);
 
-	int i, j, k;
+	int i;
+	// Draw the room
 	glBegin(GL_TRIANGLES);
 	for(i = 0; i < VERTEX_COUNT; i++)
 	{
@@ -319,18 +326,36 @@ void display()
 		glTexCoord2f(TEX_COORDS[i].x, TEX_COORDS[i].y);
 		glVertex3f(VERTICES[i].x, VERTICES[i].y, VERTICES[i].z);
 	}
+	glEnd();
+
+	// Draw the main door
+	glPushMatrix();
+	glTranslatef(-0.192099, -0.052135, -8.332047);
+	glRotatef(main_door_angle, 0.0f, 1.0f, 0.0f);
+	glTranslatef(0.192099, 0.052135, 8.332047);
+	glBegin(GL_TRIANGLES);
 	for(i = 0; i < DOOR_VERTEX_COUNT; i++)
 	{
 		glNormal3f(DOOR_NORMALS[i].x, DOOR_NORMALS[i].y, DOOR_NORMALS[i].z);
 		glTexCoord2f(DOOR_TEX_COORDS[i].x, DOOR_TEX_COORDS[i].y);
 		glVertex3f(DOOR_VERTICES[i].x, DOOR_VERTICES[i].y, DOOR_VERTICES[i].z);
 	}
+	glEnd();
+	glPopMatrix();
+
+	// Draw the side door
+	glPushMatrix();
+	glTranslatef(-1.743257, -0.122533, 7.634487);
+	glRotatef(side_door_angle, 0.0f, 1.0f, 0.0f);
+	glTranslatef(1.743257, 0.122533, -7.634487);
+	glBegin(GL_TRIANGLES);
 	for(i = 0; i < WINDOWED_DOOR_VERTEX_COUNT; i++)
 	{
 		glNormal3f(WINDOWED_DOOR_NORMALS[i].x, WINDOWED_DOOR_NORMALS[i].y, WINDOWED_DOOR_NORMALS[i].z);
 		glTexCoord2f(WINDOWED_DOOR_TEX_COORDS[i].x, WINDOWED_DOOR_TEX_COORDS[i].y);
 		glVertex3f(WINDOWED_DOOR_VERTICES[i].x, WINDOWED_DOOR_VERTICES[i].y, WINDOWED_DOOR_VERTICES[i].z);
 	}
+	// Draw the windows
 	for(i = 0; i < WINDOW_VERTEX_COUNT; i++)
 	{
 		glNormal3f(WINDOW_NORMALS[i].x, WINDOW_NORMALS[i].y, WINDOW_NORMALS[i].z);
@@ -338,6 +363,8 @@ void display()
 		glVertex3f(WINDOW_VERTICES[i].x, WINDOW_VERTICES[i].y, WINDOW_VERTICES[i].z);
 	}
 	glEnd();
+	glPopMatrix();
+
 	
 	glutSwapBuffers();
 }
@@ -351,6 +378,9 @@ void idle()
 	fwd.x *= KEYBOARD['c'] ? move_forward * 2 : move_forward;
 	fwd.y = 0.0f; // Projects fwd in the xz plane
 	fwd.z *= KEYBOARD['c'] ? move_forward * 2 : move_forward;
+
+	main_door();
+	side_door();
 
 	// Lateral movement
 	int move_right = KEYBOARD['d'] - KEYBOARD['a'];
@@ -400,6 +430,11 @@ void keyboard(unsigned char key, int x, int y)
 
 	// Setting the key as pressed
 	KEYBOARD[tolower(key)] = 1;
+
+	if(tolower(key) == '1')
+		open_main_door *= -1;
+	if(tolower(key) == '2')
+		open_side_door *= -1;
 }
 
 void keyboard_up(unsigned char key, int x, int y)
@@ -442,6 +477,42 @@ void draw_grid(int n)
 		glVertex3f(d, 0.0f, n);
 	}
 	glEnd();
+}
+
+void main_door()
+{
+	if(open_main_door == 1)
+	{
+		if(main_door_angle > -110)
+			main_door_angle -= 3;
+		else
+			main_door_angle = -110;
+	}
+	else if(open_main_door == -1)
+	{
+		if(main_door_angle < 0)
+			main_door_angle += 3;
+		else
+			main_door_angle = 0;
+	}
+}
+
+void side_door()
+{
+	if(open_side_door == 1)
+	{
+		if(side_door_angle > -95)
+			side_door_angle -= 3;
+		else
+			side_door_angle = -95;
+	}
+	else if(open_side_door == -1)
+	{
+		if(side_door_angle < 0)
+			side_door_angle += 3;
+		else
+			side_door_angle = 0;
+	}
 }
 
 
