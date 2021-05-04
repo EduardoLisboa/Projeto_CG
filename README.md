@@ -20,7 +20,7 @@ Essas pastas "include" e "lib" são as que foram baixadas no link acima e a past
 - [X] Movimentação da porta secundária
 - [X] Movimentação das janelas
 - [ ] Ventilador com movimento perpétuo
-- [ ] Luminário spot
+- [ ] Luminária spot
 - [ ] Quadro de Van Gogh
 - [ ] Texturas em pelo menos 5 objetos
 
