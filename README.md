@@ -1,7 +1,11 @@
 # Projeto de Computação Gráfica
 
+Alunos:
+* Eduardo Antônio de Lucena Lisboa
+* Jonathas Patrick Hermenegildo de Azevedo
+
 ### Para compilar o programa é necessária uma biblioteca chamada ***freeglut*** disponível [aqui](https://www.transmissionzero.co.uk/software/freeglut-devel/)
-A versão utilizada foi a MinGW e para compilar o programa é necessário utilizar o seguinte comando:
+A versão utilizada foi a MinGW e para compilar o programa é necessário utilizar o seguinte comando no terminal do Windows:
 ~~~
 gcc main.c -o main.exe -I"C:/Endereço/Para/Pasta/include" -L"C:/Endereço/Para/Pasta/lib" -lfreeglut -lopengl32 -lglu32
 ~~~
