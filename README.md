@@ -1,8 +1,8 @@
 # Projeto de Computação Gráfica
 
 Alunos:
-* Eduardo Antônio de Lucena Lisboa
-* Jonathas Patrick Hermenegildo de Azevedo
+* [Eduardo Antônio de Lucena Lisboa](https://github.com/EduardoLisboa)
+* [Jonathas Patrick Hermenegildo de Azevedo](https://github.com/PatrickStyle66)
 
 ### Para compilar o programa é necessária uma biblioteca chamada ***freeglut*** disponível [aqui](https://www.transmissionzero.co.uk/software/freeglut-devel/)
 A versão utilizada foi a MinGW e para compilar o programa é necessário utilizar o seguinte comando no terminal do Windows:
