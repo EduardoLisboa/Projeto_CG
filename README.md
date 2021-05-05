@@ -50,3 +50,5 @@ Essas pastas "include" e "lib" são as que foram baixadas no link acima e a past
 * <https://docs.microsoft.com/en-us/windows/win32/opengl/opengl>
 * <http://docs.gl/>
 * <https://docs.microsoft.com/en-us/windows/win32/opengl/opengl>
+* <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexParameter.xhtml>
+* <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBindTexture.xhtml>
