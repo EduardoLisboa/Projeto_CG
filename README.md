@@ -37,3 +37,16 @@ Essas pastas "include" e "lib" são as que foram baixadas no link acima e a past
 * Prateleira
 * Luminária
 * Ar condicionado
+
+### Referências
+* <https://stackoverflow.com/questions/41858408/how-to-load-texture-opengl>
+* <http://www.opengl-tutorial.org/beginners-tutorials/tutorial-5-a-textured-cube/>
+* <https://computergraphics.stackexchange.com/questions/4310/how-to-translate-object-to-origin>
+* <https://community.khronos.org/t/opengl-creating-a-command-to-open-a-door/65403/3>
+* <http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-17-quaternions/#euler-angles>
+* <https://www.youtube.com/watch?v=ZXjL7EqpSw8&ab_channel=gamedevlog>
+* <https://github.com/totex/Learn-OpenGL-in-python>
+* <https://www.labri.fr/perso/nrougier/python-opengl/>
+* <https://docs.microsoft.com/en-us/windows/win32/opengl/opengl>
+* <http://docs.gl/>
+* <https://docs.microsoft.com/en-us/windows/win32/opengl/opengl>
