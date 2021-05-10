@@ -5,7 +5,7 @@ Alunos:
 * [Jonathas Patrick Hermenegildo de Azevedo](https://github.com/PatrickStyle66)
 
 ### Para compilar o programa é necessária uma biblioteca chamada ***freeglut*** disponível [aqui](https://www.transmissionzero.co.uk/software/freeglut-devel/) e a biblioteca ***stb_image.h*** disponível [aqui](https://github.com/nothings/stb/blob/master/stb_image.h)
-A versão utilizada foi a MinGW e para compilar o programa é necessário utilizar o seguinte comando no terminal do Windows:
+A versão utilizada foi a MinGW e para compilar o programa é necessário utilizar o seguinte comando no cmd ou powershell do Windows:
 ~~~
 gcc main.c -o main.exe -I"C:\Endereço\Para\Pasta\include" -L"C:\Endereço\Para\Pasta\lib" -lfreeglut -lopengl32 -lglu32
 ~~~
