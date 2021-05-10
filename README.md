@@ -19,10 +19,10 @@ Essas pastas "include" e "lib" são as que foram baixadas no link acima e as pas
 - [X] Movimentação da porta principal
 - [X] Movimentação da porta secundária
 - [X] Movimentação das janelas
-- [ ] Ventilador com movimento perpétuo
-- [ ] Luminária spot
-- [ ] Quadro de Van Gogh
-- [ ] Texturas em pelo menos 5 objetos
+- [X] Ventilador com movimento perpétuo
+- [X] Luminária spot
+- [X] Quadro de Van Gogh
+- [X] Texturas em pelo menos 5 objetos
 
 ### Renderização de um quarto com:
 * 3 camas (um beliche e uma cama)
