@@ -53,3 +53,4 @@ Essas pastas "include" e "lib" são as que foram baixadas no link acima e as pas
 * <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glTexParameter.xhtml>
 * <https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glBindTexture.xhtml>
 * <https://www.youtube.com/playlist?list=PLa1F2ddGya_-UvuAqHAksYnB0qL9yWDO6>
+* <https://open.gl/textures>
