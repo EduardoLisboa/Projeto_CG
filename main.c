@@ -7,31 +7,7 @@
 #include <ctype.h>
 #include <GL/gl.h>
 #include <GL/freeglut.h>
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
-
-/*------------------------------------------*/
-/*--------------- DATA TYPES ---------------*/
-/*------------------------------------------*/
-typedef struct Vec2 {
-    float x, y;
-} Vec2;
-
-typedef struct Vec3 {
-    float x, y, z;
-} Vec3;
-
-typedef struct Transform {
-    Vec3 position;
-    Vec3 rotation;
-} Transform;
-
-
-/*-----------------------------------------*/
-/*--------------- CONSTANTS ---------------*/
-/*-----------------------------------------*/
-const float DEG2RAD = 3.14159265 / 180.0f;
+#include "utilities.h"
 
 
 /*------------------------------------------*/
@@ -50,173 +26,85 @@ Vec2 MOTION;
 /*-------------------------------------------*/
 /*-------------- OBJ MESH DATA --------------*/
 /*-------------------------------------------*/
-#define MAX_VERTICES 60000
 
 // Object 1
-unsigned int air_conditioner_tex_id;
-int AIR_CONDITIONER_VERTEX_COUNT;
-Vec3 AIR_CONDITIONER_VERTICES[MAX_VERTICES];
-Vec3 AIR_CONDITIONER_NORMALS[MAX_VERTICES];
-Vec2 AIR_CONDITIONER_TEX_COORDS[MAX_VERTICES];
+ObjectMesh AIR_CONDITIONER;
 
 // Object 2
-unsigned int doors_tex_id;
 int main_door_angle = 0;
 int open_main_door = -1;
-int DOOR_VERTEX_COUNT;
-Vec3 DOOR_VERTICES[MAX_VERTICES];
-Vec3 DOOR_NORMALS[MAX_VERTICES];
-Vec2 DOOR_TEX_COORDS[MAX_VERTICES];
+ObjectMesh DOOR;
 
 // Object 3
 int side_door_angle = 0;
 int open_side_door = -1;
-int SECONDARY_DOOR_VERTEX_COUNT;
-Vec3 SECONDARY_DOOR_VERTICES[MAX_VERTICES];
-Vec3 SECONDARY_DOOR_NORMALS[MAX_VERTICES];
-Vec2 SECONDARY_DOOR_TEX_COORDS[MAX_VERTICES];
+ObjectMesh SECONDARY_DOOR;
 
 // Object 4
-int BUNKBED_VERTEX_COUNT;
-Vec3 BUNKBED_VERTICES[MAX_VERTICES];
-Vec3 BEUNKBED_NORMALS[MAX_VERTICES];
-Vec2 BUNKBED_TEX_COORDS[MAX_VERTICES];
+ObjectMesh BUNKBED;
 
 // Object 5
-unsigned int windows_tex_id;
 int open_windows = -1;
 int window_angle = 0;
-int LEFT_WINDOW_VERTEX_COUNT;
-Vec3 LEFT_WINDOW_VERTICES[MAX_VERTICES];
-Vec3 LEFT_WINDOW_NORMALS[MAX_VERTICES];
-Vec2 LEFT_WINDOW_TEX_COORDS[MAX_VERTICES];
+ObjectMesh LEFT_WINDOW;
 
 // Object 6
-int RIGHT_WINDOW_VERTEX_COUNT;
-Vec3 RIGHT_WINDOW_VERTICES[MAX_VERTICES];
-Vec3 RIGHT_WINDOW_NORMALS[MAX_VERTICES];
-Vec2 RIGHT_WINDOW_TEX_COORDS[MAX_VERTICES];
+ObjectMesh RIGHT_WINDOW;
 
 // Object 7
-unsigned int table_tex_id;
-int TABLE_VERTEX_COUNT;
-Vec3 TABLE_VERTICES[MAX_VERTICES];
-Vec3 TABLE_NORMALS[MAX_VERTICES];
-Vec2 TABLE_TEX_COORDS[MAX_VERTICES];
+ObjectMesh TABLE;
 
 // Object 8
-int BED_VERTEX_COUNT;
-Vec3 BED_VERTICES[MAX_VERTICES];
-Vec3 BED_NORMALS[MAX_VERTICES];
-Vec2 BED_TEX_COORDS[MAX_VERTICES];
+ObjectMesh BED;
 
 // Object 9
-unsigned int creeper_tex_id;
-int CREEPER_VERTEX_COUNT;
-Vec3 CREEPER_VERTICES[MAX_VERTICES];
-Vec3 CREEPER_NORMALS[MAX_VERTICES];
-Vec2 CREEPER_TEX_COORDS[MAX_VERTICES];
+ObjectMesh CREEPER;
 
 // Object 10
-unsigned int wardrobe_tex_id;
-int WARDROBE_VERTEX_COUNT;
-Vec3 WARDROBE_VERTICES[MAX_VERTICES];
-Vec3 WARDROBE_NORMALS[MAX_VERTICES];
-Vec2 WARDROBE_TEX_COORDS[MAX_VERTICES];
+ObjectMesh WARDROBE;
 
 // Object 11
-unsigned int monitor1_tex_id;
-int MONITOR1_VERTEX_COUNT;
-Vec3 MONITOR1_VERTICES[MAX_VERTICES];
-Vec3 MONITOR1_NORMALS[MAX_VERTICES];
-Vec2 MONITOR1_TEX_COORDS[MAX_VERTICES];
+ObjectMesh MONITOR1;
 
 // Object 12
-unsigned int monitor2_tex_id;
-int MONITOR2_VERTEX_COUNT;
-Vec3 MONITOR2_VERTICES[MAX_VERTICES];
-Vec3 MONITOR2_NORMALS[MAX_VERTICES];
-Vec2 MONITOR2_TEX_COORDS[MAX_VERTICES];
+ObjectMesh MONITOR2;
 
 // Object 13
-int MOUSE_VERTEX_COUNT;
-Vec3 MOUSE_VERTICES[MAX_VERTICES];
-Vec3 MOUSE_NORMALS[MAX_VERTICES];
-Vec2 MOUSE_TEX_COORDS[MAX_VERTICES];
+ObjectMesh MOUSE;
 
 // Object 14
-unsigned int mousepad_tex_id;
-int MOUSEPAD_VERTEX_COUNT;
-Vec3 MOUSEPAD_VERTICES[MAX_VERTICES];
-Vec3 MOUSEPAD_NORMALS[MAX_VERTICES];
-Vec2 MOUSEPAD_TEX_COORDS[MAX_VERTICES];
+ObjectMesh MOUSEPAD;
 
 // Object 15
-unsigned int pc_tex_id;
-int PC_VERTEX_COUNT;
-Vec3 PC_VERTICES[MAX_VERTICES];
-Vec3 PC_NORMALS[MAX_VERTICES];
-Vec2 PC_TEX_COORDS[MAX_VERTICES];
+ObjectMesh PC;
 
 // Object 16
-unsigned int shelf_tex_id;
-int SHELF_VERTEX_COUNT;
-Vec3 SHELF_VERTICES[MAX_VERTICES];
-Vec3 SHELF_NORMALS[MAX_VERTICES];
-Vec2 SHELF_TEX_COORDS[MAX_VERTICES];
+ObjectMesh SHELF;
 
 // Object 17
-int ROOM_VERTEX_COUNT;
-Vec3 ROOM_VERTICES[MAX_VERTICES];
-Vec3 ROOM_NORMALS[MAX_VERTICES];
-Vec2 ROOM_TEX_COORDS[MAX_VERTICES];
+ObjectMesh ROOM;
 
 // Object 18
-int KEYBOARD_VERTEX_COUNT;
-Vec3 KEYBOARD_VERTICES[MAX_VERTICES];
-Vec3 KEYBOARD_NORMALS[MAX_VERTICES];
-Vec2 KEYBOARD_TEX_COORDS[MAX_VERTICES];
+ObjectMesh KEYBOARD_OBJ;
 
 // Object 19
-unsigned int tnt_tex_id;
-int TNT_VERTEX_COUNT;
-Vec3 TNT_VERTICES[MAX_VERTICES];
-Vec3 TNT_NORMALS[MAX_VERTICES];
-Vec2 TNT_TEX_COORDS[MAX_VERTICES];
+ObjectMesh TNT;
 
 // Object 20
 int fan_speed = 3;
-int FAN_VERTEX_COUNT;
-Vec3 FAN_VERTICES[MAX_VERTICES];
-Vec3 FAN_NORMALS[MAX_VERTICES];
-Vec2 FAN_TEX_COORDS[MAX_VERTICES];
+ObjectMesh FAN;
 
 // Object 21
-int TABLE_LAMP_VERTEX_COUNT;
-Vec3 TABLE_LAMP_VERTICES[MAX_VERTICES];
-Vec3 TABLE_LAMP_NORMALS[MAX_VERTICES];
-Vec2 TABLE_LAMP_TEX_COORDS[MAX_VERTICES];
+ObjectMesh TABLE_LAMP;
 
 // Object 22
-unsigned int painting_tex_id;
-int PAINTING_VERTEX_COUNT;
-Vec3 PAINTING_VERTICES[MAX_VERTICES];
-Vec3 PAINTING_NORMALS[MAX_VERTICES];
-Vec2 PAINTING_TEX_COORDS[MAX_VERTICES];
+ObjectMesh PAINTING;
 
 // Object 23
-unsigned int fan_base_tex_id;
-int FAN_BASE_VERTEX_COUNT;
-Vec3 FAN_BASE_VERTICES[MAX_VERTICES];
-Vec3 FAN_BASE_NORMALS[MAX_VERTICES];
-Vec2 FAN_BASE_TEX_COORDS[MAX_VERTICES];
+ObjectMesh FAN_BASE;
 
 // Object 24
-unsigned int chair_tex_id;
-int CHAIR_VERTEX_COUNT;
-Vec3 CHAIR_VERTICES[MAX_VERTICES];
-Vec3 CHAIR_NORMALS[MAX_VERTICES];
-Vec2 CHAIR_TEX_COORDS[MAX_VERTICES];
+ObjectMesh CHAIR;
 
 
 /*---------------------------------------------*/
@@ -224,7 +112,6 @@ Vec2 CHAIR_TEX_COORDS[MAX_VERTICES];
 /*---------------------------------------------*/
 void init_gl();
 void setup_lighting();
-int load_obj(const char* path, int object);
 int load_all_objects();
 unsigned int load_texture(const char* path);
 void load_all_textures();
@@ -341,410 +228,171 @@ void setup_lighting()
     glEnable(GL_LIGHT1);
 }
 
-int load_obj(const char* path, int object)
-{
-    FILE *fp = fopen(path, "r");
-
-    if(!fp) return 0;
-
-    char buffer[512] = "";
-    int vertex_count = 0;
-    int normal_count = 0;
-    int tex_coord_count = 0;
-
-    Vec3 vertices[MAX_VERTICES];
-    Vec3 normals[MAX_VERTICES];
-    Vec2 tex_coords[MAX_VERTICES];
-
-    while(fgets(buffer, 512, fp))
-    {
-        // Comment
-        if(buffer[0] == '#') continue;
-
-        char* token = strtok(buffer, " ");
-
-        if(strcmp(token, "v") == 0)
-        {
-            // Parse vertex
-            vertices[vertex_count].x = atof(strtok(NULL, " "));
-            vertices[vertex_count].y = atof(strtok(NULL, " "));
-            vertices[vertex_count].z = atof(strtok(NULL, " "));
-            vertex_count++;
-        }
-        else if(strcmp(token, "vn") == 0)
-        {
-            // Parse normal vector
-            normals[normal_count].x = atof(strtok(NULL, " "));
-            normals[normal_count].y = atof(strtok(NULL, " "));
-            normals[normal_count].z = atof(strtok(NULL, " "));
-            normal_count++;
-        }
-        else if(strcmp(token, "vt") == 0)
-        {
-            // Parse texture coordinate
-            tex_coords[tex_coord_count].x = atof(strtok(NULL, " "));
-            tex_coords[tex_coord_count].y = -atof(strtok(NULL, " "));
-            tex_coord_count++;
-        }
-        else if(strcmp(token, "f") == 0)
-        {
-            // Parse face
-            int i;
-            for(i = 0; i < 3; i++)
-            {
-                if(object == 1) // Room
-                {
-                    AIR_CONDITIONER_VERTICES[AIR_CONDITIONER_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    AIR_CONDITIONER_TEX_COORDS[AIR_CONDITIONER_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    AIR_CONDITIONER_NORMALS[AIR_CONDITIONER_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    AIR_CONDITIONER_VERTEX_COUNT++;
-                }
-                else if(object == 2) // Main door
-                {
-                    DOOR_VERTICES[DOOR_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    DOOR_TEX_COORDS[DOOR_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    DOOR_NORMALS[DOOR_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    DOOR_VERTEX_COUNT++;
-                }
-                else if(object == 3) // Secondary door
-                {
-                    SECONDARY_DOOR_VERTICES[SECONDARY_DOOR_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    SECONDARY_DOOR_TEX_COORDS[SECONDARY_DOOR_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    SECONDARY_DOOR_NORMALS[SECONDARY_DOOR_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    SECONDARY_DOOR_VERTEX_COUNT++;
-                }
-                else if(object == 4) // Door window
-                {
-                    BUNKBED_VERTICES[BUNKBED_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    BUNKBED_TEX_COORDS[BUNKBED_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    BEUNKBED_NORMALS[BUNKBED_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    BUNKBED_VERTEX_COUNT++;
-                }
-                else if(object == 5) // Left window
-                {
-                    LEFT_WINDOW_VERTICES[LEFT_WINDOW_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    LEFT_WINDOW_TEX_COORDS[LEFT_WINDOW_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    LEFT_WINDOW_NORMALS[LEFT_WINDOW_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    LEFT_WINDOW_VERTEX_COUNT++;
-                }
-                else if(object == 6) // Right window
-                {
-                    RIGHT_WINDOW_VERTICES[RIGHT_WINDOW_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    RIGHT_WINDOW_TEX_COORDS[RIGHT_WINDOW_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    RIGHT_WINDOW_NORMALS[RIGHT_WINDOW_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    RIGHT_WINDOW_VERTEX_COUNT++;
-                }
-                else if(object == 7) // Table
-                {
-                    TABLE_VERTICES[TABLE_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    TABLE_TEX_COORDS[TABLE_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    TABLE_NORMALS[TABLE_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    TABLE_VERTEX_COUNT++;
-                }
-                else if(object == 8) // Bed
-                {
-                    BED_VERTICES[BED_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    BED_TEX_COORDS[BED_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    BED_NORMALS[BED_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    BED_VERTEX_COUNT++;
-                }
-                else if(object == 9) // Creeper
-                {
-                    CREEPER_VERTICES[CREEPER_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    CREEPER_TEX_COORDS[CREEPER_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    CREEPER_NORMALS[CREEPER_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    CREEPER_VERTEX_COUNT++;
-                }
-                else if(object == 10) // Wardrobe
-                {
-                    WARDROBE_VERTICES[WARDROBE_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    WARDROBE_TEX_COORDS[WARDROBE_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    WARDROBE_NORMALS[WARDROBE_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    WARDROBE_VERTEX_COUNT++;
-                }
-                else if(object == 11) // Monitor 1
-                {
-                    MONITOR1_VERTICES[MONITOR1_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    MONITOR1_TEX_COORDS[MONITOR1_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    MONITOR1_NORMALS[MONITOR1_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    MONITOR1_VERTEX_COUNT++;
-                }
-                else if(object == 12) // Monitor 2
-                {
-                    MONITOR2_VERTICES[MONITOR2_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    MONITOR2_TEX_COORDS[MONITOR2_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    MONITOR2_NORMALS[MONITOR2_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    MONITOR2_VERTEX_COUNT++;
-                }
-                else if(object == 13) // Mouse
-                {
-                    MOUSE_VERTICES[MOUSE_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    MOUSE_TEX_COORDS[MOUSE_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    MOUSE_NORMALS[MOUSE_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    MOUSE_VERTEX_COUNT++;
-                }
-                else if(object == 14) // Mousepad
-                {
-                    MOUSEPAD_VERTICES[MOUSEPAD_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    MOUSEPAD_TEX_COORDS[MOUSEPAD_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    MOUSEPAD_NORMALS[MOUSEPAD_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    MOUSEPAD_VERTEX_COUNT++;
-                }
-                else if(object == 15) // PC
-                {
-                    PC_VERTICES[PC_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    PC_TEX_COORDS[PC_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    PC_NORMALS[PC_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    PC_VERTEX_COUNT++;
-                }
-                else if(object == 16) // Shelf
-                {
-                    SHELF_VERTICES[SHELF_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    SHELF_TEX_COORDS[SHELF_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    SHELF_NORMALS[SHELF_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    SHELF_VERTEX_COUNT++;
-                }
-                else if(object == 17) // Room
-                {
-                    ROOM_VERTICES[ROOM_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    ROOM_TEX_COORDS[ROOM_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    ROOM_NORMALS[ROOM_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    ROOM_VERTEX_COUNT++;
-                }
-                else if(object == 18) // Keyboard
-                {
-                    KEYBOARD_VERTICES[KEYBOARD_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    KEYBOARD_TEX_COORDS[KEYBOARD_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    KEYBOARD_NORMALS[KEYBOARD_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    KEYBOARD_VERTEX_COUNT++;
-                }
-                else if(object == 19) // TNT
-                {
-                    TNT_VERTICES[TNT_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    TNT_TEX_COORDS[TNT_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    TNT_NORMALS[TNT_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    TNT_VERTEX_COUNT++;
-                }
-                else if(object == 20) // Fan
-                {
-                    FAN_VERTICES[FAN_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    FAN_TEX_COORDS[FAN_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    FAN_NORMALS[FAN_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    FAN_VERTEX_COUNT++;
-                }
-                else if(object == 21) // Table lamp
-                {
-                    TABLE_LAMP_VERTICES[TABLE_LAMP_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    TABLE_LAMP_TEX_COORDS[TABLE_LAMP_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    TABLE_LAMP_NORMALS[TABLE_LAMP_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    TABLE_LAMP_VERTEX_COUNT++;
-                }
-                else if(object == 22) // Painting
-                {
-                    PAINTING_VERTICES[PAINTING_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    PAINTING_TEX_COORDS[PAINTING_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    PAINTING_NORMALS[PAINTING_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    PAINTING_VERTEX_COUNT++;
-                }
-                else if(object == 23) // Fan base
-                {
-                    FAN_BASE_VERTICES[FAN_BASE_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    FAN_BASE_TEX_COORDS[FAN_BASE_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    FAN_BASE_NORMALS[FAN_BASE_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    FAN_BASE_VERTEX_COUNT++;
-                }
-                else if(object == 24) // Chair
-                {
-                    CHAIR_VERTICES[CHAIR_VERTEX_COUNT] = vertices[atoi(strtok(NULL, "/")) - 1];
-                    CHAIR_TEX_COORDS[CHAIR_VERTEX_COUNT] = tex_coords[atoi(strtok(NULL, "/")) - 1];
-                    CHAIR_NORMALS[CHAIR_VERTEX_COUNT] = normals[atoi(strtok(NULL, " ")) - 1];
-                    CHAIR_VERTEX_COUNT++;
-                }
-            }
-        }
-    }
-
-    fclose(fp);
-
-    return 1;
-}
-
 int load_all_objects()
 {
-    if(!load_obj("objects/Ar.obj", 1))
+    ObjectMesh *ptr = &AIR_CONDITIONER;
+    if(!load_obj("objects/Ar.obj", ptr))
     {
         perror("Erro ao abrir o arquivo 'Ar'!");
         return -1;
     }
-    if(!load_obj("objects/portaPrincipal.obj", 2))
+    ptr = &DOOR;
+    if(!load_obj("objects/portaPrincipal.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/portaSecundaria.obj", 3))
+    ptr = &SECONDARY_DOOR;
+    if(!load_obj("objects/portaSecundaria.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/beliche.obj", 4))
+    ptr = &BUNKBED;
+    if(!load_obj("objects/beliche.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/Janela1.obj", 5))
+    ptr = &LEFT_WINDOW;
+    if(!load_obj("objects/Janela1.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/Janela2.obj", 6))
+    ptr = &RIGHT_WINDOW;
+    if(!load_obj("objects/Janela2.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/biro.obj", 7))
+    ptr = &TABLE;
+    if(!load_obj("objects/biro.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/Cama.obj", 8))
+    ptr = &BED;
+    if(!load_obj("objects/Cama.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/creeper.obj", 9))
+    ptr = &CREEPER;
+    if(!load_obj("objects/creeper.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/GuardaRoupa.obj", 10))
+    ptr = &WARDROBE;
+    if(!load_obj("objects/GuardaRoupa.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/Monitor1.obj", 11))
+    ptr = &MONITOR1;
+    if(!load_obj("objects/Monitor1.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/Monitor2.obj", 12))
+    ptr = &MONITOR2;
+    if(!load_obj("objects/Monitor2.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/mouse.obj", 13))
+    ptr = &MOUSE;
+    if(!load_obj("objects/mouse.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/mousepad.obj", 14))
+    ptr = &MOUSEPAD;
+    if(!load_obj("objects/mousepad.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/PC.obj", 15))
+    ptr = &PC;
+    if(!load_obj("objects/PC.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/prateleira.obj", 16))
+    ptr = &SHELF;
+    if(!load_obj("objects/prateleira.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/Quarto.obj", 17))
+    ptr = &ROOM;
+    if(!load_obj("objects/Quarto.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/teclado.obj", 18))
+    ptr = &KEYBOARD_OBJ;
+    if(!load_obj("objects/teclado.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/tnt.obj", 19))
+    ptr = &TNT;
+    if(!load_obj("objects/tnt.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/ventilador.obj", 20))
+    ptr = &FAN;
+    if(!load_obj("objects/ventilador.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/luminaria.obj", 21))
+    ptr = &TABLE_LAMP;
+    if(!load_obj("objects/luminaria.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/Quadro.obj", 22))
+    ptr = &PAINTING;
+    if(!load_obj("objects/Quadro.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/ventiladorBase.obj", 23))
+    ptr = &FAN_BASE;
+    if(!load_obj("objects/ventiladorBase.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-    if(!load_obj("objects/cadeira.obj", 24))
+    ptr = &CHAIR;
+    if(!load_obj("objects/cadeira.obj", ptr))
     {
         perror("Erro ao abrir o arquivo");
         return -1;
     }
-}
-
-unsigned int load_texture(const char* path)
-{
-    unsigned int textureID;
-    glGenTextures(1, &textureID);
-
-    int width, height, nrComponents;
-    unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
-    if(data)
-    {
-        GLenum format;
-        if (nrComponents == 1)
-            format = GL_RED;
-        else if (nrComponents == 3)
-            format = GL_RGB;
-        else if (nrComponents == 4)
-            format = GL_RGBA;
-
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        stbi_image_free(data);
-    }
-    else
-    {
-        perror("Texture failed to load");
-        stbi_image_free(data);
-    }
-    return textureID;
 }
 
 void load_all_textures()
 {
-    air_conditioner_tex_id = load_texture("textures/ArFront.jpg");
-	doors_tex_id = load_texture("textures/portas.jpg");
-    windows_tex_id = load_texture("textures/janela.jpg");
-    table_tex_id = load_texture("textures/biro.jpg");
-    creeper_tex_id = load_texture("textures/creeper.png");
-    wardrobe_tex_id = load_texture("textures/armario.jpg");
-    monitor1_tex_id = load_texture("textures/Tela1.png");
-    monitor2_tex_id = load_texture("textures/Tela2.png");
-    mousepad_tex_id = load_texture("textures/mousepad.png");
-    pc_tex_id = load_texture("textures/PC.png");
-    shelf_tex_id = load_texture("textures/prateleira.jpg");
-    tnt_tex_id = load_texture("textures/tnt.png");
-    painting_tex_id = load_texture("textures/NoiteEstrelada2.jpg");
-    fan_base_tex_id = load_texture("textures/preto.jpg");
-    chair_tex_id = load_texture("textures/AssentoCadeira.jpeg");
+    AIR_CONDITIONER.tex_id = load_texture("textures/ArFront.jpg");
+	DOOR.tex_id = load_texture("textures/portas.jpg");
+    LEFT_WINDOW.tex_id = load_texture("textures/janela.jpg");
+    TABLE.tex_id = load_texture("textures/biro.jpg");
+    CREEPER.tex_id = load_texture("textures/creeper.png");
+    WARDROBE.tex_id = load_texture("textures/armario.jpg");
+    MONITOR1.tex_id = load_texture("textures/Tela1.png");
+    MONITOR2.tex_id = load_texture("textures/Tela2.png");
+    MOUSEPAD.tex_id = load_texture("textures/mousepad.png");
+    PC.tex_id = load_texture("textures/PC.png");
+    SHELF.tex_id = load_texture("textures/prateleira.jpg");
+    TNT.tex_id = load_texture("textures/tnt.png");
+    PAINTING.tex_id = load_texture("textures/NoiteEstrelada2.jpg");
+    FAN_BASE.tex_id = load_texture("textures/preto.jpg");
+    CHAIR.tex_id = load_texture("textures/AssentoCadeira.jpeg");
 }
 
 
@@ -771,29 +419,29 @@ void display()
 
     int i;
     // Draw the air conditioner
-    glBindTexture(GL_TEXTURE_2D, air_conditioner_tex_id);
+    glBindTexture(GL_TEXTURE_2D, AIR_CONDITIONER.tex_id);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < AIR_CONDITIONER_VERTEX_COUNT; i++)
+    for(i = 0; i < AIR_CONDITIONER.VERTEX_COUNT; i++)
     {
-        glNormal3f(AIR_CONDITIONER_NORMALS[i].x, AIR_CONDITIONER_NORMALS[i].y, AIR_CONDITIONER_NORMALS[i].z);
-        glTexCoord2f(AIR_CONDITIONER_TEX_COORDS[i].x, AIR_CONDITIONER_TEX_COORDS[i].y);
-        glVertex3f(AIR_CONDITIONER_VERTICES[i].x, AIR_CONDITIONER_VERTICES[i].y, AIR_CONDITIONER_VERTICES[i].z);
+        glNormal3f(AIR_CONDITIONER.NORMALS[i].x, AIR_CONDITIONER.NORMALS[i].y, AIR_CONDITIONER.NORMALS[i].z);
+        glTexCoord2f(AIR_CONDITIONER.TEX_COORDS[i].x, AIR_CONDITIONER.TEX_COORDS[i].y);
+        glVertex3f(AIR_CONDITIONER.VERTICES[i].x, AIR_CONDITIONER.VERTICES[i].y, AIR_CONDITIONER.VERTICES[i].z);
     }
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
 
     // Draw the main door
-    glBindTexture(GL_TEXTURE_2D, doors_tex_id);
+    glBindTexture(GL_TEXTURE_2D, DOOR.tex_id);
     glPushMatrix();
     glTranslatef(-0.192099, -0.052135, -8.332047);
     glRotatef(main_door_angle, 0.0f, 1.0f, 0.0f);
     glTranslatef(0.192099, 0.052135, 8.332047);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < DOOR_VERTEX_COUNT; i++)
+    for(i = 0; i < DOOR.VERTEX_COUNT; i++)
     {
-        glNormal3f(DOOR_NORMALS[i].x, DOOR_NORMALS[i].y, DOOR_NORMALS[i].z);
-        glTexCoord2f(DOOR_TEX_COORDS[i].x, DOOR_TEX_COORDS[i].y);
-        glVertex3f(DOOR_VERTICES[i].x, DOOR_VERTICES[i].y, DOOR_VERTICES[i].z);
+        glNormal3f(DOOR.NORMALS[i].x, DOOR.NORMALS[i].y, DOOR.NORMALS[i].z);
+        glTexCoord2f(DOOR.TEX_COORDS[i].x, DOOR.TEX_COORDS[i].y);
+        glVertex3f(DOOR.VERTICES[i].x, DOOR.VERTICES[i].y, DOOR.VERTICES[i].z);
     }
     glEnd();
     glPopMatrix();
@@ -804,11 +452,11 @@ void display()
     glRotatef(side_door_angle, 0.0f, 1.0f, 0.0f);
     glTranslatef(1.743257, 0.122533, -7.634487);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < SECONDARY_DOOR_VERTEX_COUNT; i++)
+    for(i = 0; i < SECONDARY_DOOR.VERTEX_COUNT; i++)
     {
-        glNormal3f(SECONDARY_DOOR_NORMALS[i].x, SECONDARY_DOOR_NORMALS[i].y, SECONDARY_DOOR_NORMALS[i].z);
-        glTexCoord2f(SECONDARY_DOOR_TEX_COORDS[i].x, SECONDARY_DOOR_TEX_COORDS[i].y);
-        glVertex3f(SECONDARY_DOOR_VERTICES[i].x, SECONDARY_DOOR_VERTICES[i].y, SECONDARY_DOOR_VERTICES[i].z);
+        glNormal3f(SECONDARY_DOOR.NORMALS[i].x, SECONDARY_DOOR.NORMALS[i].y, SECONDARY_DOOR.NORMALS[i].z);
+        glTexCoord2f(SECONDARY_DOOR.TEX_COORDS[i].x, SECONDARY_DOOR.TEX_COORDS[i].y);
+        glVertex3f(SECONDARY_DOOR.VERTICES[i].x, SECONDARY_DOOR.VERTICES[i].y, SECONDARY_DOOR.VERTICES[i].z);
     }
     glEnd();
     glPopMatrix();
@@ -816,27 +464,27 @@ void display()
 
     // Draw the bunkbed
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < BUNKBED_VERTEX_COUNT; i++)
+    for(i = 0; i < BUNKBED.VERTEX_COUNT; i++)
     {
-        glNormal3f(BEUNKBED_NORMALS[i].x, BEUNKBED_NORMALS[i].y, BEUNKBED_NORMALS[i].z);
-        glTexCoord2f(BUNKBED_TEX_COORDS[i].x, BUNKBED_TEX_COORDS[i].y);
-        glVertex3f(BUNKBED_VERTICES[i].x, BUNKBED_VERTICES[i].y, BUNKBED_VERTICES[i].z);
+        glNormal3f(BUNKBED.NORMALS[i].x, BUNKBED.NORMALS[i].y, BUNKBED.NORMALS[i].z);
+        glTexCoord2f(BUNKBED.TEX_COORDS[i].x, BUNKBED.TEX_COORDS[i].y);
+        glVertex3f(BUNKBED.VERTICES[i].x, BUNKBED.VERTICES[i].y, BUNKBED.VERTICES[i].z);
     }
     glEnd();
 
 
     // Draw the left window
-    glBindTexture(GL_TEXTURE_2D, windows_tex_id);
+    glBindTexture(GL_TEXTURE_2D, LEFT_WINDOW.tex_id);
     glPushMatrix();
     glTranslatef(14.902783, 3.648618, -1.792326);
     glRotatef(window_angle, 0.0f, 1.0f, 0.0f);
     glTranslatef(-14.902783, -3.648618, 1.792326);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < LEFT_WINDOW_VERTEX_COUNT; i++)
+    for(i = 0; i < LEFT_WINDOW.VERTEX_COUNT; i++)
     {
-        glNormal3f(LEFT_WINDOW_NORMALS[i].x, LEFT_WINDOW_NORMALS[i].y, LEFT_WINDOW_NORMALS[i].z);
-        glTexCoord2f(LEFT_WINDOW_TEX_COORDS[i].x, LEFT_WINDOW_TEX_COORDS[i].y);
-        glVertex3f(LEFT_WINDOW_VERTICES[i].x, LEFT_WINDOW_VERTICES[i].y, LEFT_WINDOW_VERTICES[i].z);
+        glNormal3f(LEFT_WINDOW.NORMALS[i].x, LEFT_WINDOW.NORMALS[i].y, LEFT_WINDOW.NORMALS[i].z);
+        glTexCoord2f(LEFT_WINDOW.TEX_COORDS[i].x, LEFT_WINDOW.TEX_COORDS[i].y);
+        glVertex3f(LEFT_WINDOW.VERTICES[i].x, LEFT_WINDOW.VERTICES[i].y, LEFT_WINDOW.VERTICES[i].z);
     }
     glEnd();
     glPopMatrix();
@@ -847,160 +495,160 @@ void display()
     glRotatef(-window_angle, 0.0f, 1.0f, 0.0f);
     glTranslatef(-14.903056, -3.648618, -3.201038);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < RIGHT_WINDOW_VERTEX_COUNT; i++)
+    for(i = 0; i < RIGHT_WINDOW.VERTEX_COUNT; i++)
     {
-        glNormal3f(RIGHT_WINDOW_NORMALS[i].x, RIGHT_WINDOW_NORMALS[i].y, RIGHT_WINDOW_NORMALS[i].z);
-        glTexCoord2f(RIGHT_WINDOW_TEX_COORDS[i].x, RIGHT_WINDOW_TEX_COORDS[i].y);
-        glVertex3f(RIGHT_WINDOW_VERTICES[i].x, RIGHT_WINDOW_VERTICES[i].y, RIGHT_WINDOW_VERTICES[i].z);
+        glNormal3f(RIGHT_WINDOW.NORMALS[i].x, RIGHT_WINDOW.NORMALS[i].y, RIGHT_WINDOW.NORMALS[i].z);
+        glTexCoord2f(RIGHT_WINDOW.TEX_COORDS[i].x, RIGHT_WINDOW.TEX_COORDS[i].y);
+        glVertex3f(RIGHT_WINDOW.VERTICES[i].x, RIGHT_WINDOW.VERTICES[i].y, RIGHT_WINDOW.VERTICES[i].z);
     }
     glEnd();
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);
 
     // Draw the table
-    glBindTexture(GL_TEXTURE_2D, table_tex_id);
+    glBindTexture(GL_TEXTURE_2D, TABLE.tex_id);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < TABLE_VERTEX_COUNT; i++)
+    for(i = 0; i < TABLE.VERTEX_COUNT; i++)
     {
-        glNormal3f(TABLE_NORMALS[i].x, TABLE_NORMALS[i].y, TABLE_NORMALS[i].z);
-        glTexCoord2f(TABLE_TEX_COORDS[i].x, TABLE_TEX_COORDS[i].y);
-        glVertex3f(TABLE_VERTICES[i].x, TABLE_VERTICES[i].y, TABLE_VERTICES[i].z);
+        glNormal3f(TABLE.NORMALS[i].x, TABLE.NORMALS[i].y, TABLE.NORMALS[i].z);
+        glTexCoord2f(TABLE.TEX_COORDS[i].x, TABLE.TEX_COORDS[i].y);
+        glVertex3f(TABLE.VERTICES[i].x, TABLE.VERTICES[i].y, TABLE.VERTICES[i].z);
     }
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     
     // Draw the bed
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < BED_VERTEX_COUNT; i++)
+    for(i = 0; i < BED.VERTEX_COUNT; i++)
     {
-        glNormal3f(BED_NORMALS[i].x, BED_NORMALS[i].y, BED_NORMALS[i].z);
-        glTexCoord2f(BED_TEX_COORDS[i].x, BED_TEX_COORDS[i].y);
-        glVertex3f(BED_VERTICES[i].x, BED_VERTICES[i].y, BED_VERTICES[i].z);
+        glNormal3f(BED.NORMALS[i].x, BED.NORMALS[i].y, BED.NORMALS[i].z);
+        glTexCoord2f(BED.TEX_COORDS[i].x, BED.TEX_COORDS[i].y);
+        glVertex3f(BED.VERTICES[i].x, BED.VERTICES[i].y, BED.VERTICES[i].z);
     }
     glEnd();
     
     // Draw the creeper
-    glBindTexture(GL_TEXTURE_2D, creeper_tex_id);
+    glBindTexture(GL_TEXTURE_2D, CREEPER.tex_id);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < CREEPER_VERTEX_COUNT; i++)
+    for(i = 0; i < CREEPER.VERTEX_COUNT; i++)
     {
-        glNormal3f(CREEPER_NORMALS[i].x, CREEPER_NORMALS[i].y, CREEPER_NORMALS[i].z);
-        glTexCoord2f(CREEPER_TEX_COORDS[i].x, CREEPER_TEX_COORDS[i].y);
-        glVertex3f(CREEPER_VERTICES[i].x, CREEPER_VERTICES[i].y, CREEPER_VERTICES[i].z);
+        glNormal3f(CREEPER.NORMALS[i].x, CREEPER.NORMALS[i].y, CREEPER.NORMALS[i].z);
+        glTexCoord2f(CREEPER.TEX_COORDS[i].x, CREEPER.TEX_COORDS[i].y);
+        glVertex3f(CREEPER.VERTICES[i].x, CREEPER.VERTICES[i].y, CREEPER.VERTICES[i].z);
     }
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     
     // Draw the wardrobe
-    glBindTexture(GL_TEXTURE_2D, wardrobe_tex_id);
+    glBindTexture(GL_TEXTURE_2D, WARDROBE.tex_id);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < WARDROBE_VERTEX_COUNT; i++)
+    for(i = 0; i < WARDROBE.VERTEX_COUNT; i++)
     {
-        glNormal3f(WARDROBE_NORMALS[i].x, WARDROBE_NORMALS[i].y, WARDROBE_NORMALS[i].z);
-        glTexCoord2f(WARDROBE_TEX_COORDS[i].x, WARDROBE_TEX_COORDS[i].y);
-        glVertex3f(WARDROBE_VERTICES[i].x, WARDROBE_VERTICES[i].y, WARDROBE_VERTICES[i].z);
+        glNormal3f(WARDROBE.NORMALS[i].x, WARDROBE.NORMALS[i].y, WARDROBE.NORMALS[i].z);
+        glTexCoord2f(WARDROBE.TEX_COORDS[i].x, WARDROBE.TEX_COORDS[i].y);
+        glVertex3f(WARDROBE.VERTICES[i].x, WARDROBE.VERTICES[i].y, WARDROBE.VERTICES[i].z);
     }
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     
     // Draw the monitor 1
-    glBindTexture(GL_TEXTURE_2D, monitor1_tex_id);
+    glBindTexture(GL_TEXTURE_2D, MONITOR1.tex_id);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < MONITOR1_VERTEX_COUNT; i++)
+    for(i = 0; i < MONITOR1.VERTEX_COUNT; i++)
     {
-        glNormal3f(MONITOR1_NORMALS[i].x, MONITOR1_NORMALS[i].y, MONITOR1_NORMALS[i].z);
-        glTexCoord2f(MONITOR1_TEX_COORDS[i].x, MONITOR1_TEX_COORDS[i].y);
-        glVertex3f(MONITOR1_VERTICES[i].x, MONITOR1_VERTICES[i].y, MONITOR1_VERTICES[i].z);
+        glNormal3f(MONITOR1.NORMALS[i].x, MONITOR1.NORMALS[i].y, MONITOR1.NORMALS[i].z);
+        glTexCoord2f(MONITOR1.TEX_COORDS[i].x, MONITOR1.TEX_COORDS[i].y);
+        glVertex3f(MONITOR1.VERTICES[i].x, MONITOR1.VERTICES[i].y, MONITOR1.VERTICES[i].z);
     }
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     
     // Draw the monitor 2
-    glBindTexture(GL_TEXTURE_2D, monitor2_tex_id);
+    glBindTexture(GL_TEXTURE_2D, MONITOR2.tex_id);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < MONITOR2_VERTEX_COUNT; i++)
+    for(i = 0; i < MONITOR2.VERTEX_COUNT; i++)
     {
-        glNormal3f(MONITOR2_NORMALS[i].x, MONITOR2_NORMALS[i].y, MONITOR2_NORMALS[i].z);
-        glTexCoord2f(MONITOR2_TEX_COORDS[i].x, MONITOR2_TEX_COORDS[i].y);
-        glVertex3f(MONITOR2_VERTICES[i].x, MONITOR2_VERTICES[i].y, MONITOR2_VERTICES[i].z);
+        glNormal3f(MONITOR2.NORMALS[i].x, MONITOR2.NORMALS[i].y, MONITOR2.NORMALS[i].z);
+        glTexCoord2f(MONITOR2.TEX_COORDS[i].x, MONITOR2.TEX_COORDS[i].y);
+        glVertex3f(MONITOR2.VERTICES[i].x, MONITOR2.VERTICES[i].y, MONITOR2.VERTICES[i].z);
     }
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     
     // Draw the mouse
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < MOUSE_VERTEX_COUNT; i++)
+    for(i = 0; i < MOUSE.VERTEX_COUNT; i++)
     {
-        glNormal3f(MOUSE_NORMALS[i].x, MOUSE_NORMALS[i].y, MOUSE_NORMALS[i].z);
-        glTexCoord2f(MOUSE_TEX_COORDS[i].x, MOUSE_TEX_COORDS[i].y);
-        glVertex3f(MOUSE_VERTICES[i].x, MOUSE_VERTICES[i].y, MOUSE_VERTICES[i].z);
+        glNormal3f(MOUSE.NORMALS[i].x, MOUSE.NORMALS[i].y, MOUSE.NORMALS[i].z);
+        glTexCoord2f(MOUSE.TEX_COORDS[i].x, MOUSE.TEX_COORDS[i].y);
+        glVertex3f(MOUSE.VERTICES[i].x, MOUSE.VERTICES[i].y, MOUSE.VERTICES[i].z);
     }
     glEnd();
 
     // Draw the mousepad
-    glBindTexture(GL_TEXTURE_2D, mousepad_tex_id);
+    glBindTexture(GL_TEXTURE_2D, MOUSEPAD.tex_id);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < MOUSEPAD_VERTEX_COUNT; i++)
+    for(i = 0; i < MOUSEPAD.VERTEX_COUNT; i++)
     {
-        glNormal3f(MOUSEPAD_NORMALS[i].x, MOUSEPAD_NORMALS[i].y, MOUSEPAD_NORMALS[i].z);
-        glTexCoord2f(MOUSEPAD_TEX_COORDS[i].x, MOUSEPAD_TEX_COORDS[i].y);
-        glVertex3f(MOUSEPAD_VERTICES[i].x, MOUSEPAD_VERTICES[i].y, MOUSEPAD_VERTICES[i].z);
+        glNormal3f(MOUSEPAD.NORMALS[i].x, MOUSEPAD.NORMALS[i].y, MOUSEPAD.NORMALS[i].z);
+        glTexCoord2f(MOUSEPAD.TEX_COORDS[i].x, MOUSEPAD.TEX_COORDS[i].y);
+        glVertex3f(MOUSEPAD.VERTICES[i].x, MOUSEPAD.VERTICES[i].y, MOUSEPAD.VERTICES[i].z);
     }
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
 
     // Draw the PC
-    glBindTexture(GL_TEXTURE_2D, pc_tex_id);
+    glBindTexture(GL_TEXTURE_2D, PC.tex_id);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < PC_VERTEX_COUNT; i++)
+    for(i = 0; i < PC.VERTEX_COUNT; i++)
     {
-        glNormal3f(PC_NORMALS[i].x, PC_NORMALS[i].y, PC_NORMALS[i].z);
-        glTexCoord2f(PC_TEX_COORDS[i].x, PC_TEX_COORDS[i].y);
-        glVertex3f(PC_VERTICES[i].x, PC_VERTICES[i].y, PC_VERTICES[i].z);
+        glNormal3f(PC.NORMALS[i].x, PC.NORMALS[i].y, PC.NORMALS[i].z);
+        glTexCoord2f(PC.TEX_COORDS[i].x, PC.TEX_COORDS[i].y);
+        glVertex3f(PC.VERTICES[i].x, PC.VERTICES[i].y, PC.VERTICES[i].z);
     }
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     
     // Draw the shelf
-    glBindTexture(GL_TEXTURE_2D, shelf_tex_id);
+    glBindTexture(GL_TEXTURE_2D, SHELF.tex_id);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < SHELF_VERTEX_COUNT; i++)
+    for(i = 0; i < SHELF.VERTEX_COUNT; i++)
     {
-        glNormal3f(SHELF_NORMALS[i].x, SHELF_NORMALS[i].y, SHELF_NORMALS[i].z);
-        glTexCoord2f(SHELF_TEX_COORDS[i].x, SHELF_TEX_COORDS[i].y);
-        glVertex3f(SHELF_VERTICES[i].x, SHELF_VERTICES[i].y, SHELF_VERTICES[i].z);
+        glNormal3f(SHELF.NORMALS[i].x, SHELF.NORMALS[i].y, SHELF.NORMALS[i].z);
+        glTexCoord2f(SHELF.TEX_COORDS[i].x, SHELF.TEX_COORDS[i].y);
+        glVertex3f(SHELF.VERTICES[i].x, SHELF.VERTICES[i].y, SHELF.VERTICES[i].z);
     }
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     
     // Draw the room
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < ROOM_VERTEX_COUNT; i++)
+    for(i = 0; i < ROOM.VERTEX_COUNT; i++)
     {
-        glNormal3f(ROOM_NORMALS[i].x, ROOM_NORMALS[i].y, ROOM_NORMALS[i].z);
-        glTexCoord2f(ROOM_TEX_COORDS[i].x, ROOM_TEX_COORDS[i].y);
-        glVertex3f(ROOM_VERTICES[i].x, ROOM_VERTICES[i].y, ROOM_VERTICES[i].z);
+        glNormal3f(ROOM.NORMALS[i].x, ROOM.NORMALS[i].y, ROOM.NORMALS[i].z);
+        glTexCoord2f(ROOM.TEX_COORDS[i].x, ROOM.TEX_COORDS[i].y);
+        glVertex3f(ROOM.VERTICES[i].x, ROOM.VERTICES[i].y, ROOM.VERTICES[i].z);
     }
     glEnd();
     
     // Draw the keyboard
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < KEYBOARD_VERTEX_COUNT; i++)
+    for(i = 0; i < KEYBOARD_OBJ.VERTEX_COUNT; i++)
     {
-        glNormal3f(KEYBOARD_NORMALS[i].x, KEYBOARD_NORMALS[i].y, KEYBOARD_NORMALS[i].z);
-        glTexCoord2f(KEYBOARD_TEX_COORDS[i].x, KEYBOARD_TEX_COORDS[i].y);
-        glVertex3f(KEYBOARD_VERTICES[i].x, KEYBOARD_VERTICES[i].y, KEYBOARD_VERTICES[i].z);
+        glNormal3f(KEYBOARD_OBJ.NORMALS[i].x, KEYBOARD_OBJ.NORMALS[i].y, KEYBOARD_OBJ.NORMALS[i].z);
+        glTexCoord2f(KEYBOARD_OBJ.TEX_COORDS[i].x, KEYBOARD_OBJ.TEX_COORDS[i].y);
+        glVertex3f(KEYBOARD_OBJ.VERTICES[i].x, KEYBOARD_OBJ.VERTICES[i].y, KEYBOARD_OBJ.VERTICES[i].z);
     }
     glEnd();
     
     // Draw the tnt
-    glBindTexture(GL_TEXTURE_2D, tnt_tex_id);
+    glBindTexture(GL_TEXTURE_2D, TNT.tex_id);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < TNT_VERTEX_COUNT; i++)
+    for(i = 0; i < TNT.VERTEX_COUNT; i++)
     {
-        glNormal3f(TNT_NORMALS[i].x, TNT_NORMALS[i].y, TNT_NORMALS[i].z);
-        glTexCoord2f(TNT_TEX_COORDS[i].x, TNT_TEX_COORDS[i].y);
-        glVertex3f(TNT_VERTICES[i].x, TNT_VERTICES[i].y, TNT_VERTICES[i].z);
+        glNormal3f(TNT.NORMALS[i].x, TNT.NORMALS[i].y, TNT.NORMALS[i].z);
+        glTexCoord2f(TNT.TEX_COORDS[i].x, TNT.TEX_COORDS[i].y);
+        glVertex3f(TNT.VERTICES[i].x, TNT.VERTICES[i].y, TNT.VERTICES[i].z);
     }
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -1012,27 +660,27 @@ void display()
     glRotatef(fan_speed, 0.0f, 0.0f, 1.0f);
     glTranslatef(-1.220647, -2.604736, -2.619632);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < FAN_VERTEX_COUNT; i++)
+    for(i = 0; i < FAN.VERTEX_COUNT; i++)
     {
-        glNormal3f(FAN_NORMALS[i].x, FAN_NORMALS[i].y, FAN_NORMALS[i].z);
-        glTexCoord2f(FAN_TEX_COORDS[i].x, FAN_TEX_COORDS[i].y);
-        glVertex3f(FAN_VERTICES[i].x, FAN_VERTICES[i].y, FAN_VERTICES[i].z);
+        glNormal3f(FAN.NORMALS[i].x, FAN.NORMALS[i].y, FAN.NORMALS[i].z);
+        glTexCoord2f(FAN.TEX_COORDS[i].x, FAN.TEX_COORDS[i].y);
+        glVertex3f(FAN.VERTICES[i].x, FAN.VERTICES[i].y, FAN.VERTICES[i].z);
     }
     glEnd();
     glPopMatrix();
 
     // Draw the fan base
-    glBindTexture(GL_TEXTURE_2D, fan_base_tex_id);
+    glBindTexture(GL_TEXTURE_2D, FAN_BASE.tex_id);
     glPushMatrix();
     glTranslatef(1.220647, 2.604736, 2.619632);
     glRotatef(-40, 0.0f, 1.0f, 0.0f);
     glTranslatef(-1.220647, -2.604736, -2.619632);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < FAN_BASE_VERTEX_COUNT; i++)
+    for(i = 0; i < FAN_BASE.VERTEX_COUNT; i++)
     {
-        glNormal3f(FAN_BASE_NORMALS[i].x, FAN_BASE_NORMALS[i].y, FAN_BASE_NORMALS[i].z);
-        glTexCoord2f(FAN_BASE_TEX_COORDS[i].x, FAN_BASE_TEX_COORDS[i].y);
-        glVertex3f(FAN_BASE_VERTICES[i].x, FAN_BASE_VERTICES[i].y, FAN_BASE_VERTICES[i].z);
+        glNormal3f(FAN_BASE.NORMALS[i].x, FAN_BASE.NORMALS[i].y, FAN_BASE.NORMALS[i].z);
+        glTexCoord2f(FAN_BASE.TEX_COORDS[i].x, FAN_BASE.TEX_COORDS[i].y);
+        glVertex3f(FAN_BASE.VERTICES[i].x, FAN_BASE.VERTICES[i].y, FAN_BASE.VERTICES[i].z);
     }
     glEnd();
     glPopMatrix();
@@ -1040,34 +688,34 @@ void display()
 
     // Draw the table lamp
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < TABLE_LAMP_VERTEX_COUNT; i++)
+    for(i = 0; i < TABLE_LAMP.VERTEX_COUNT; i++)
     {
-        glNormal3f(TABLE_LAMP_NORMALS[i].x, TABLE_LAMP_NORMALS[i].y, TABLE_LAMP_NORMALS[i].z);
-        glTexCoord2f(TABLE_LAMP_TEX_COORDS[i].x, TABLE_LAMP_TEX_COORDS[i].y);
-        glVertex3f(TABLE_LAMP_VERTICES[i].x, TABLE_LAMP_VERTICES[i].y, TABLE_LAMP_VERTICES[i].z);
+        glNormal3f(TABLE_LAMP.NORMALS[i].x, TABLE_LAMP.NORMALS[i].y, TABLE_LAMP.NORMALS[i].z);
+        glTexCoord2f(TABLE_LAMP.TEX_COORDS[i].x, TABLE_LAMP.TEX_COORDS[i].y);
+        glVertex3f(TABLE_LAMP.VERTICES[i].x, TABLE_LAMP.VERTICES[i].y, TABLE_LAMP.VERTICES[i].z);
     }
     glEnd();
 
     // Draw the paiting
-    glBindTexture(GL_TEXTURE_2D, painting_tex_id);
+    glBindTexture(GL_TEXTURE_2D, PAINTING.tex_id);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < PAINTING_VERTEX_COUNT; i++)
+    for(i = 0; i < PAINTING.VERTEX_COUNT; i++)
     {
-        glNormal3f(PAINTING_NORMALS[i].x, PAINTING_NORMALS[i].y, PAINTING_NORMALS[i].z);
-        glTexCoord2f(PAINTING_TEX_COORDS[i].x, PAINTING_TEX_COORDS[i].y);
-        glVertex3f(PAINTING_VERTICES[i].x, PAINTING_VERTICES[i].y, PAINTING_VERTICES[i].z);
+        glNormal3f(PAINTING.NORMALS[i].x, PAINTING.NORMALS[i].y, PAINTING.NORMALS[i].z);
+        glTexCoord2f(PAINTING.TEX_COORDS[i].x, PAINTING.TEX_COORDS[i].y);
+        glVertex3f(PAINTING.VERTICES[i].x, PAINTING.VERTICES[i].y, PAINTING.VERTICES[i].z);
     }
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     
     // Draw the chair
-    glBindTexture(GL_TEXTURE_2D, chair_tex_id);
+    glBindTexture(GL_TEXTURE_2D, CHAIR.tex_id);
     glBegin(GL_TRIANGLES);
-    for(i = 0; i < CHAIR_VERTEX_COUNT; i++)
+    for(i = 0; i < CHAIR.VERTEX_COUNT; i++)
     {
-        glNormal3f(CHAIR_NORMALS[i].x, CHAIR_NORMALS[i].y, CHAIR_NORMALS[i].z);
-        glTexCoord2f(CHAIR_TEX_COORDS[i].x, CHAIR_TEX_COORDS[i].y);
-        glVertex3f(CHAIR_VERTICES[i].x, CHAIR_VERTICES[i].y, CHAIR_VERTICES[i].z);
+        glNormal3f(CHAIR.NORMALS[i].x, CHAIR.NORMALS[i].y, CHAIR.NORMALS[i].z);
+        glTexCoord2f(CHAIR.TEX_COORDS[i].x, CHAIR.TEX_COORDS[i].y);
+        glVertex3f(CHAIR.VERTICES[i].x, CHAIR.VERTICES[i].y, CHAIR.VERTICES[i].z);
     }
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
